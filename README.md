@@ -2,8 +2,7 @@
 <a href="https://www.linkedin.com/in/zakaria-al-haddad-b0b060284/"><img src="https://img.shields.io/badge/-LinkedIn-0072b1?&style=for-the-badge&logo=linkedin&logoColor=white" /></a>
 
 
-I'm a Computer Science graduate with a strong interest in technology and a passion for solving complex problems. I'm continuously learning, especially in cybersecurity, and enjoy working with systems, networks, and tech tools to find effective solutions.
-## Objective
+I'm an IT Support professional with a strong interest in technology and a passion for solving complex problems. I’m continuously learning, especially in cybersecurity, and enjoy working with systems, networks, and technical tools to find effective solutions. With hands-on experience in 1st and 2nd line support, I’m skilled in troubleshooting, hardware and software setup, and using tools such as Active Directory, Windows 10, and Microsoft Office Suite. I have experience providing face-to-face, phone, and remote support, efficiently resolving technical issues, and collaborating with stakeholders. Strong organisational and reporting abilities, developed through previous operational roles, enable me to contribute effectively in IT service and support environments.
 
 
 My journey in computer science sparked a strong passion for cybersecurity, and I am now focused on advancing my career within a Security Operations Center (SOC) environment as a Security Analyst, where I can apply my technical skills to protect and defend critical systems.
