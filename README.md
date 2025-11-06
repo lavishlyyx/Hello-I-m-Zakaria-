@@ -29,27 +29,20 @@ My journey in computer science sparked a strong passion for cybersecurity, and I
 ### 💣 Exploitation
 <div>
 <img src="https://img.shields.io/badge/-Kali%20Linux-268BEE?&style=for-the-badge&logo=kalilinux&logoColor=white" />
-<img src="https://img.shields.io/badge/-Hydra-8A2BE2?&style=for-the-badge&logoColor=white" />
-<img src="https://img.shields.io/badge/-CeWL-006400?&style=for-the-badge&logoColor=white" />
-<img src="https://img.shields.io/badge/-msfvenom-800000?&style=for-the-badge&logo=metasploit&logoColor=white" />
-<img src="https://img.shields.io/badge/-Meterpreter-DC143C?&style=for-the-badge&logo=metasploit&logoColor=white" />
-<img src="https://img.shields.io/badge/-SSH%20Client-333333?&style=for-the-badge&logo=linux&logoColor=white" />
+
 </div>
 
 ### ⚙️ Post-Exploitation
 <div>
 <img src="https://img.shields.io/badge/-Linux%20Enumeration-555555?&style=for-the-badge&logo=linux&logoColor=white" />
 <img src="https://img.shields.io/badge/-PowerShell-5391FE?&style=for-the-badge&logo=powershell&logoColor=white" />
-<img src="https://img.shields.io/badge/-Bash%20%2F%20Python%20Scripts-FFD43B?&style=for-the-badge&logo=python&logoColor=black" />
+
 </div>
 
 
 ### 🧠 SIEM / SOC
 <div>
-<img src="https://img.shields.io/badge/-Splunk-000000?&style=for-the-badge&logo=splunk&logoColor=white" />
-<img src="https://img.shields.io/badge/-Elastic-005571?&style=for-the-badge&logo=elasticsearch&logoColor=white" />
-<img src="https://img.shields.io/badge/-Shuffle%20SOAR-8A2BE2?&style=for-the-badge&logo=workflow&logoColor=white" />
-<img src="https://img.shields.io/badge/-Slack-4A154B?&style=for-the-badge&logo=slack&logoColor=white" />
+
 </div>
 
 
