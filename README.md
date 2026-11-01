@@ -19,7 +19,7 @@
 
 I'm an IT Support professional with experience providing **1st and 2nd line support at Imperial College Healthcare NHS Trust**, helping users with Windows, Microsoft 365, Active Directory, troubleshooting, device deployment and IT requests.
 
-I also have customer-facing technical support experience and enjoy learning **Python, web development, networking, Linux and practical systems administration**.
+I also have customer facing technical support experience and enjoy learning **Python, web development, networking, Linux and practical systems administration**.
 
 I'm developing projects to demonstrate both real IT support workflows and software engineering skills. I'm particularly interested in opportunities where I can continue learning and contribute to a supportive technical team.
 
