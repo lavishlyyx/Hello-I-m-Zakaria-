@@ -1,38 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { createRoot } from "react-dom/client";
+import React,{useEffect,useState} from "react";
+import {createRoot} from "react-dom/client";
 import "./style.css";
-type Status = "Open" | "In Progress" | "Resolved" | "Closed";
-type Ticket = {id:number;title:string;description:string;priority:string;status:Status;created_at:string};
+type Ticket={id:number;title:string;description:string;requester:string;priority:string;status:string;assignee:string;created_at:string};
+type Detail=Ticket & {comments:{id:number;author:string;body:string}[];history:{id:number;message:string}[]};
+type Asset={asset_tag:string;device:string;assigned_to:string;status:string};
+type Article={id:number;title:string;body:string;category:string};
 const API="http://127.0.0.1:8000";
-function App() {
-  const [tickets,setTickets]=useState<Ticket[]>([]);
-  const [title,setTitle]=useState("");
-  const [description,setDescription]=useState("");
-  const [priority,setPriority]=useState("Medium");
-  const [error,setError]=useState("");
-  const refresh=async()=>{
-    try { const r=await fetch(API+"/tickets");if(!r.ok)throw Error("API returned an error");setTickets(await r.json());setError(""); }
-    catch {setError("Cannot reach the local API. Start FastAPI on port 8000.");}
-  };
-  useEffect(()=>{void refresh();},[]);
-  const create=async(e:React.FormEvent)=>{
-    e.preventDefault();
-    try {
-      const r=await fetch(API+"/tickets",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title,description,priority})});
-      if(!r.ok) throw Error("Ticket not created. Check the form.");
-      setTitle("");setDescription("");await refresh();
-    } catch(e) {setError(String(e));}
-  };
-  const change=async(id:number,status:Status)=>{
-    try{const r=await fetch(API+`/tickets/${id}/status`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status})});if(!r.ok)throw Error("Update failed");await refresh();}
-    catch(e){setError(String(e));}
-  };
-  return <main className="container">
-    <header><div><span className="eyebrow">LOCAL PORTFOLIO DEMO</span><h1>SupportSphere</h1><p>IT service desk • Ticket management</p></div><span className="pill">Version 0.1</span></header>
-    <section className="metrics"><div><strong>{tickets.length}</strong><span>Total tickets</span></div><div><strong>{tickets.filter(t=>t.status==="Open").length}</strong><span>Open</span></div><div><strong>{tickets.filter(t=>t.status==="Resolved"||t.status==="Closed").length}</strong><span>Resolved / Closed</span></div></section>
-    {error&&<p className="error" role="alert">{error}</p>}
-    <div className="layout"><section className="panel"><h2>Create ticket</h2><form onSubmit={create}><label>Issue title<input value={title} onChange={e=>setTitle(e.target.value)} required minLength={3} maxLength={120} placeholder="e.g. Cannot sign in"/></label><label>Description<textarea value={description} onChange={e=>setDescription(e.target.value)} required minLength={5} rows={5}/></label><label>Priority<select value={priority} onChange={e=>setPriority(e.target.value)}><option>Low</option><option>Medium</option><option>High</option></select></label><button type="submit">Submit ticket</button></form></section><section className="panel"><h2>Ticket queue</h2>{tickets.length===0?<p>No tickets yet.</p>:tickets.map(t=><article key={t.id} className="ticket"><div className="ticket-head"><strong>#{t.id} · {t.title}</strong><small>{t.priority}</small></div><p>{t.description}</p><label>Status <select aria-label={`Status for ticket ${t.id}`} value={t.status} onChange={e=>void change(t.id,e.target.value as Status)}>{["Open","In Progress","Resolved","Closed"].map(v=><option key={v}>{v}</option>)}</select></label></article>)}</section></div>
-    <footer>Demo only • No authentication or real company data • Do not expose publicly</footer>
-  </main>;
+async function request(path:string,init?:RequestInit){const r=await fetch(API+path,init);if(!r.ok)throw new Error("Request failed ("+r.status+")");return r.json();}
+const json=(method:string,data:object):RequestInit=>({method,headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+function App(){
+const [tab,setTab]=useState("Tickets"),[tickets,setTickets]=useState<Ticket[]>([]),[detail,setDetail]=useState<Detail|null>(null),[assets,setAssets]=useState<Asset[]>([]),[articles,setArticles]=useState<Article[]>([]),[title,setTitle]=useState(""),[description,setDescription]=useState(""),[requester,setRequester]=useState("Jamie Smith"),[priority,setPriority]=useState("Medium"),[comment,setComment]=useState(""),[search,setSearch]=useState(""),[user,setUser]=useState<any>(null),[error,setError]=useState("");
+const refresh=async()=>{try{setTickets(await request("/tickets"));setAssets(await request("/assets"));setArticles(await request("/knowledge"));setError("");}catch(e){setError("Local API unavailable. Start FastAPI on port 8000. "+String(e));}};
+const open=async(id:number)=>{try{setDetail(await request("/tickets/"+id));}catch(e){setError(String(e));}};
+useEffect(()=>{void refresh();},[]);
+const submit=async(e:React.FormEvent)=>{e.preventDefault();try{await request("/tickets",json("POST",{title,description,requester,priority}));setTitle("");setDescription("");await refresh();}catch(e){setError(String(e));}};
+const update=async(id:number,values:object)=>{try{await request("/tickets/"+id,json("PATCH",values));await refresh();await open(id);}catch(e){setError(String(e));}};
+const addComment=async(e:React.FormEvent)=>{e.preventDefault();if(!detail)return;try{await request("/tickets/"+detail.id+"/comments",json("POST",{author:"Lab Technician",body:comment}));setComment("");await open(detail.id);}catch(e){setError(String(e));}};
+const lookup=async(e:React.FormEvent)=>{e.preventDefault();try{setUser(await request("/lab/directory/"+encodeURIComponent(search.trim())));setError("");}catch(e){setUser(null);setError("Synthetic account not found.");}};
+const filtered=tickets.filter(t=>(t.title+" "+t.requester+" "+t.assignee).toLowerCase().includes(search.toLowerCase()));
+return <div className="shell"><aside><h2>◈ SupportSphere</h2><p>PORTFOLIO DEMO</p>{["Tickets","Assets","Knowledge","Directory Demo"].map(n=><button key={n} className={tab===n?"nav active":"nav"} onClick={()=>{setTab(n);setSearch("");setError("");}}>{n}</button>)}<small>Local use only. Synthetic information. No authentication or real Active Directory connection.</small></aside><main className="main"><header><div><span className="eyebrow">NORTHSTAR SOLUTIONS / SERVICE DESK</span><h1>{tab}</h1><p>Hands-on IT service management portfolio</p></div><span className="pill">Demo v0.2</span></header>{error&&<p role="alert" className="error">{error}</p>}
+{tab==="Tickets"&&<><section className="metrics"><div><strong>{tickets.length}</strong><span>Total tickets</span></div><div><strong>{tickets.filter(t=>t.status==="Open").length}</strong><span>Open</span></div><div><strong>{tickets.filter(t=>t.status==="In Progress").length}</strong><span>In progress</span></div><div><strong>{tickets.filter(t=>["Resolved","Closed"].includes(t.status)).length}</strong><span>Resolved / closed</span></div></section><div className="layout"><section className="panel"><h2>New incident</h2><form onSubmit={submit}><label>Issue title<input value={title} required minLength={3} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder="Cannot access company account"/></label><label>Requester<input value={requester} required minLength={2} onChange={e=>setRequester(e.target.value)}/></label><label>Description<textarea value={description} required minLength={5} onChange={e=>setDescription(e.target.value)} rows={4}/></label><label>Priority<select value={priority} onChange={e=>setPriority(e.target.value)}>{["Low","Medium","High","Critical"].map(x=><option key={x}>{x}</option>)}</select></label><button type="submit">Create ticket</button></form></section><section className="panel"><h2>Ticket queue</h2><input aria-label="Search tickets" placeholder="Search by title, employee or technician" value={search} onChange={e=>setSearch(e.target.value)}/>{filtered.map(t=><article className="ticket" key={t.id}><div className="ticket-head"><strong>#{t.id} · {t.title}</strong><span className="pill">{t.priority}</span></div><p>{t.description}</p><small>{t.requester} · {t.status} · {t.assignee||"Unassigned"}</small><button className="outline" onClick={()=>void open(t.id)}>View and manage</button></article>)}{filtered.length===0&&<p>No matching tickets.</p>}</section></div>{detail&&<section className="panel detail"><div className="ticket-head"><h2>Ticket #{detail.id}: {detail.title}</h2><button className="outline" onClick={()=>setDetail(null)}>Close details</button></div><div className="detail-grid"><label>Status<select value={detail.status} onChange={e=>void update(detail.id,{status:e.target.value})}>{["Open","In Progress","Resolved","Closed"].map(s=><option key={s}>{s}</option>)}</select></label><label>Assigned technician<input key={detail.id+"-"+detail.assignee} defaultValue={detail.assignee} onBlur={e=>{if(e.target.value!==detail.assignee)void update(detail.id,{assignee:e.target.value});}} placeholder="Type name, then click outside"/></label></div><h3>Comments</h3>{detail.comments.map(c=><p key={c.id} className="note"><b>{c.author}</b>: {c.body}</p>)}<form onSubmit={addComment}><label>Add note<textarea value={comment} required minLength={2} onChange={e=>setComment(e.target.value)} rows={2}/></label><button>Add comment</button></form><h3>Change history</h3>{detail.history.map(h=><p className="note" key={h.id}>{h.message}</p>)}</section>}</>}
+{tab==="Assets"&&<section className="panel"><h2>Demo asset register</h2>{assets.map(a=><article className="ticket" key={a.asset_tag}><strong>{a.asset_tag}</strong><p>{a.device} · {a.assigned_to}</p><span className="pill">{a.status}</span></article>)}</section>}
+{tab==="Knowledge"&&<section className="panel"><h2>Troubleshooting knowledge base</h2>{articles.map(a=><article className="ticket" key={a.id}><strong>{a.title}</strong><p>{a.body}</p><span className="pill">{a.category}</span></article>)}</section>}
+{tab==="Directory Demo"&&<section className="panel"><h2>Mock account lookup</h2><p>This uses fictional fixtures, <strong>not a connected Windows Server</strong>.</p><form onSubmit={lookup}><label>Lab username<input placeholder="jsmith, amorgan or tlee" value={search} onChange={e=>setSearch(e.target.value)} required/></label><button>Look up synthetic account</button></form>{user&&<article className="ticket"><h3>{user.display_name}</h3><p>Department: {user.department}</p><p>Enabled: {String(user.enabled)} · Locked: {String(user.locked)}</p><small>Source: {user.source} · Real AD connected: {String(user.connected_to_ad)}</small></article>}</section>}
+<footer>Portfolio prototype • No production authentication • Never expose this development API publicly</footer></main></div>
 }
 createRoot(document.getElementById("root")!).render(<React.StrictMode><App/></React.StrictMode>);
