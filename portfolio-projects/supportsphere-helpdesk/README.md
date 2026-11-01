@@ -1,47 +1,49 @@
-# SupportSphere — Full-Stack IT Helpdesk MVP
+# SupportSphere — IT Helpdesk Portfolio Application
 
-**Status: Starter code / development project.** This is a local demo for a junior software engineering + IT support portfolio.
+**Current status: coded local demo. Not deployed, not tested in a Windows environment, and not production-ready.** The backend stores tickets in a local SQLite database. The app contains **no real user logins or access controls**. Do not expose it publicly.
 
 ![Illustrative dashboard mockup](docs/dashboard-mockup.svg)
 
-## Functionality included
-- FastAPI + SQLite API with ticket create, list, status update and health check.
-- React + TypeScript UI for creating tickets, displaying a ticket queue and changing ticket status.
-- Sample records are created automatically on the first run.
+## Implemented source-code features
+- React + TypeScript ticketing dashboard.
+- Ticket creation, searchable queue and detailed view.
+- Priority, status transitions and technician assignment.
+- Comments and persistent ticket change history.
+- Synthetic IT asset register and troubleshooting knowledge base.
+- Fictional directory account lookup explicitly identified as **mock data**, not Windows Active Directory.
+- Basic automated API test cases.
 
-## Not yet implemented
-Authentication, authorisation, PostgreSQL, ticket assignment, comments, audit logs, automated testing, deployment, and live Active Directory integration. **Do not publish this demo on the public internet until access control and security are implemented.**
+## Local installation (Windows 11)
+Required tools: Python 3.11+, Node.js LTS, Git. No installation has been performed on your PC.
 
-## Run backend
-Requires Python 3.11+.
-
-```bash
-cd portfolio-projects/supportsphere-helpdesk/backend
-python -m venv .venv
-# Windows PowerShell: .\.venv\Scripts\Activate.ps1
-# macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```powershell
+git clone https://github.com/lavishlyyx/Hello-I-m-Zakaria-.git
+cd Hello-I-m-Zakaria-/portfolio-projects/supportsphere-helpdesk/backend
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Visit http://127.0.0.1:8000/docs to explore the API.
+Open another PowerShell window in `portfolio-projects/supportsphere-helpdesk/frontend`:
 
-## Run frontend
-Requires Node.js LTS and npm.
-
-```bash
-cd portfolio-projects/supportsphere-helpdesk/frontend
+```powershell
 npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite (normally http://localhost:5173).
+Visit the URL printed by Vite (usually http://127.0.0.1:5173). The API documentation is at http://127.0.0.1:8000/docs.
 
-## Next milestones
-1. Add tests and API input validation.
-2. Add users and secure authentication/authorisation.
-3. Implement technician assignment, comments and audit history.
-4. Migrate to PostgreSQL and Docker Compose.
-5. Add a separate, read-only Active Directory integration worker only after the lab is isolated.
+## Automated tests (backend)
+```powershell
+cd portfolio-projects/supportsphere-helpdesk/backend
+.\.venv\Scripts\python.exe -m unittest discover -p "test_*.py"
+```
 
-![Architecture diagram](docs/architecture.svg)
+## Known limitations and next engineering steps
+- Add secure authentication, role-based access control and per-ticket authorization before deployment.
+- Add API security testing, proper migrations and PostgreSQL.
+- Add more frontend tests and verify TypeScript production build.
+- Replace mock account lookup **only** with a reviewed, authenticated, read-only service on an isolated test network.
+- Record real screenshots only after running and testing.
+
+See [features](docs/FEATURES.md), [demo scenarios](docs/demo-scenarios.md), and [Northstar lab](../northstar-ad-lab/README.md).
