@@ -5,7 +5,7 @@ type Ticket={id:number;title:string;description:string;requester:string;priority
 type Detail=Ticket & {comments:{id:number;author:string;body:string}[];history:{id:number;message:string}[]};
 type Asset={asset_tag:string;device:string;assigned_to:string;status:string};
 type Article={id:number;title:string;body:string;category:string};
-const API="http://127.0.0.1:8000";
+const API="/api";
 async function request(path:string,init?:RequestInit){const r=await fetch(API+path,init);if(!r.ok)throw new Error("Request failed ("+r.status+")");return r.json();}
 const json=(method:string,data:object):RequestInit=>({method,headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
 function App(){
